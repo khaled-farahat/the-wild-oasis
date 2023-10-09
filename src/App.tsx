@@ -1,7 +1,15 @@
+import styled from "styled-components";
+import GlobalStyles from "./styles/GlobalStyles";
+
+const StyledApp = styled.div``;
+
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <>
+      <GlobalStyles />
+      <StyledApp></StyledApp>
+    </>
+  );
+};
 
-export default App
+export default App;

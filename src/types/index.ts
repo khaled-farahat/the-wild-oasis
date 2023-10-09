@@ -20,7 +20,7 @@ export type Cabin = {
 };
 
 export type Guest = {
-  // id: string;
+  // id: number;
   fullName: string;
   email: string;
   nationality: string;

@@ -49,17 +49,17 @@ const variations = {
 };
 
 type ButtonProps = {
-  size: "small" | "medium" | "large";
-  variation: "primary" | "secondary" | "danger";
+  size?: "small" | "medium" | "large";
+  variation?: "primary" | "secondary" | "danger";
 };
 
-const Button = styled.button`
+const Button = styled.button<ButtonProps>`
   border: none;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
 
-  ${(props: ButtonProps) => sizes[props.size]}
-  ${(props: ButtonProps) => variations[props.variation]}
+  ${(props) => sizes[props.size || "medium"]}
+  ${(props) => variations[props.variation || "primary"]}
 `;
 
 Button.defaultProps = {

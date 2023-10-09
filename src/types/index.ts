@@ -11,12 +11,14 @@ export type Booking = {
 };
 
 export type Cabin = {
-  name: string;
-  maxCapacity: number;
-  regularPrice: number;
-  discount: number;
-  image: string;
-  description: string;
+  created_at: string;
+  description: string | null;
+  discount: number | null;
+  id: number;
+  image: string | null;
+  maxCapacity: number | null;
+  name: string | null;
+  regularPrice: number | null;
 };
 
 export type Guest = {

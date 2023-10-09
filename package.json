@@ -8,19 +8,22 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "generate:types":"supabase gen types typescript --project-id ortbhqwctxtvaakejoeb --schema public > ./src/types/supabase.ts"
+    "generate:types": "supabase gen types typescript --project-id ortbhqwctxtvaakejoeb --schema public > ./src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.0",
+    "@tanstack/react-query": "^4.36.1",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
     "react-router-dom": "^6.16.0",
     "styled-components": "^6.0.8"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^4.36.1",
     "@types/node": "^20.8.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

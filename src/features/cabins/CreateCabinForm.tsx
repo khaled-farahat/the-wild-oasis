@@ -1,6 +1,4 @@
 import { useForm, FieldErrors } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
 
 import Input from "@/ui/Input";
 import Form from "@/ui/Form";
@@ -9,8 +7,9 @@ import FileInput from "@/ui/FileInput";
 import Textarea from "@/ui/Textarea";
 import FormRow from "@/ui/FormRow";
 
-import { createEditCabin } from "@/services/apiCabins";
 import { Cabin, NewCabinType } from "@/types";
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditCabin } from "./useEditCabin";
 
 type NewCabinTypeWithFileList = Omit<NewCabinType, "image"> & {
   image: FileList | string;
@@ -21,10 +20,12 @@ type CreateCabinFormProps = {
 };
 
 function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
+  const { createCabin, isCreating } = useCreateCabin();
+  const { editCabin, isEditing } = useEditCabin();
+  const isWorking = isCreating || isEditing;
+
   const { id: editId, ...editValues } = cabinToEdit || {};
   const isEditSession = Boolean(editId);
-
-  const queryClient = useQueryClient();
 
   const { register, handleSubmit, reset, getValues, formState } =
     useForm<NewCabinTypeWithFileList>({
@@ -42,50 +43,25 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
 
   const { errors } = formState;
 
-  const { mutate: createCabin, isLoading: isCreating } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success("Cabin created successfully!");
-
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      reset();
-    },
-    onError: (err: Error) => {
-      toast.error(err.message);
-    },
-  });
-
-  const { mutate: editCabin, isLoading: isEditing } = useMutation({
-    mutationFn: ({
-      newCabinData,
-      id,
-    }: {
-      newCabinData: NewCabinType;
-      id: number;
-    }) => createEditCabin(newCabinData, id),
-    onSuccess: () => {
-      toast.success("Cabin successfully edited");
-
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      reset();
-    },
-    onError: (err: Error) => {
-      toast.error(err.message);
-    },
-  });
-
-  const isWorking = isCreating || isEditing;
-
   function onSubmit(data: NewCabinTypeWithFileList) {
-    // mutate({ ...data, image: data.image?.[0] });
     const image = data.image instanceof FileList ? data.image[0] : data.image;
     if (isEditSession) {
-      editCabin({
-        newCabinData: { ...data, image },
-        id: editId as number,
-      });
+      editCabin(
+        {
+          newCabinData: { ...data, image },
+          id: editId as number,
+        },
+        {
+          onSuccess: () => reset(),
+        }
+      );
     } else {
-      createCabin({ ...data, image });
+      createCabin(
+        { ...data, image },
+        {
+          onSuccess: () => reset(),
+        }
+      );
     }
   }
 

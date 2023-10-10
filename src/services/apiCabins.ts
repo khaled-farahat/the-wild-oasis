@@ -12,19 +12,31 @@ export async function getCabins() {
   return data;
 }
 
-export async function createCabin(newCabin: NewCabinType) {
-  const imageName = `${Math.random()}-${newCabin.image.name}`.replace(
-    /\//g,
-    ""
-  );
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+export async function createEditCabin(newCabin: NewCabinType, id?: number) {
+  const hasImagePath = typeof newCabin.image === "string";
 
-  // https://ortbhqwctxtvaakejoeb.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
+  const imageName =
+    newCabin.image instanceof File &&
+    `${Math.random()}-${newCabin.image.name}`.replace(/\//g, "");
 
-  // 1. Create cabin
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([{ ...newCabin, image: imagePath }]);
+  const imagePath = hasImagePath
+    ? (newCabin.image as string)
+    : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+
+  // 1. Create/Edit cabin
+  let query = supabase.from("cabins");
+
+  // A) CREATE
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
+
+  // B) EDIT
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (id) query = query.update({ ...newCabin, image: imagePath }).match({ id });
+
+  const { data, error } = await query.select().single();
 
   if (error) {
     console.error(error);
@@ -32,25 +44,25 @@ export async function createCabin(newCabin: NewCabinType) {
   }
 
   // 2. Upload Image
-  const { error: storageError } = await supabase.storage
-    .from("cabin-images")
-    .upload(imageName, newCabin.image);
+  if (!hasImagePath) {
+    const { error: storageError } = await supabase.storage
+      .from("cabin-images")
+      .upload(imageName as string, newCabin.image);
 
-  if (storageError) {
-    if (data) {
+    if (storageError) {
       const { id } = data;
       const { error: deleteError } = await supabase
         .from("cabins")
         .delete()
-        .match({ id: id as number });
+        .match({ id });
 
       if (deleteError) {
         console.error(deleteError);
         throw new Error("Cabin could not be deleted");
       }
+      console.error(storageError);
+      throw new Error("Image could not be uploaded");
     }
-    console.error(storageError);
-    throw new Error("Image could not be uploaded");
   }
 
   return data;

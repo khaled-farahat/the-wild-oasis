@@ -44,7 +44,7 @@ export type BookingWithCabinAndGuest = Booking & {
 export type NewCabinType = {
   description: string;
   discount: number;
-  image: File ;
+  image: File | string ;
   maxCapacity: number;
   name: string;
   regularPrice: number;

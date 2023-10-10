@@ -9,24 +9,23 @@ import FileInput from "@/ui/FileInput";
 import Textarea from "@/ui/Textarea";
 import FormRow from "@/ui/FormRow";
 import { createCabin } from "@/services/apiCabins";
-import { Cabin } from "@/types";
+import { NewCabinType } from "@/types";
 
-type NonNullableCabin = {
-  [K in keyof Cabin]: NonNullable<Cabin[K]>;
+type NewCabinTypeWithFileList = Omit<NewCabinType, "image"> & {
+  image: FileList;
 };
 
 function CreateCabinForm() {
   const queryClient = useQueryClient();
 
   const { register, handleSubmit, reset, getValues, formState } =
-    useForm<NonNullableCabin>({
+    useForm<NewCabinTypeWithFileList>({
       defaultValues: {
         name: "",
         maxCapacity: 0,
         regularPrice: 0,
         discount: 0,
         description: "",
-        image: "",
       },
     });
 
@@ -45,11 +44,12 @@ function CreateCabinForm() {
     },
   });
 
-  function onSubmit(data: Cabin) {
-    mutate(data);
+  function onSubmit(data: NewCabinTypeWithFileList) {
+    // console.log(data);
+    mutate({ ...data, image: data.image?.[0] });
   }
 
-  function onError(errors: FieldErrors<NonNullableCabin>) {
+  function onError(errors: FieldErrors<NewCabinTypeWithFileList>) {
     // console.log(errors);
     if (errors) return;
   }
@@ -121,7 +121,13 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Cabin photo">
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", {
+            required: "This field is required",
+          })}
+        />
       </FormRow>
 
       <FormRow>

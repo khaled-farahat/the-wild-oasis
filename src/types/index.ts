@@ -1,13 +1,19 @@
 export type Booking = {
-  created_at: string;
-  startDate: string;
-  endDate: string;
-  cabinId: number;
-  guestId: number;
-  hasBreakfast: boolean;
-  observations: string;
-  isPaid: boolean;
-  numGuests: number;
+  cabinId: number | null
+  cabinPrice: number | null
+  created_at: string
+  endDate: string | null
+  extrasPrice: number | null
+  guestId: number | null
+  hasBreakfast: boolean | null
+  id: number
+  isPaid: boolean | null
+  numGuests: number | null
+  numNights: number | null
+  observations: string | null
+  startDate: string | null
+  status: string | null
+  totalPrice: number | null
 };
 
 export type Cabin = {
@@ -29,3 +35,17 @@ export type Guest = {
   nationalID: string;
   countryFlag: string;
 };
+
+export type BookingWithCabinAndGuest = Booking & {
+  cabin: Cabin;
+  guest: Guest;
+}
+
+export type NewCabinType = {
+  description: string;
+  discount: number;
+  image: File ;
+  maxCapacity: number;
+  name: string;
+  regularPrice: number;
+}

@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "@/types/supabase";
 
-const supabaseUrl = "https://ortbhqwctxtvaakejoeb.supabase.co";
+export const supabaseUrl = "https://ortbhqwctxtvaakejoeb.supabase.co";
 const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ydGJocXdjdHh0dmFha2Vqb2ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTY4NTIzMzAsImV4cCI6MjAxMjQyODMzMH0.QWjH8MPfYUd5Dx00Plza6bxak1-536NC_hN92SgJTHM";
 const supabase = createClient<Database>(supabaseUrl, supabaseKey);

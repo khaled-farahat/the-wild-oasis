@@ -17,9 +17,10 @@ type NewCabinTypeWithFileList = Omit<NewCabinType, "image"> & {
 
 type CreateCabinFormProps = {
   cabinToEdit?: Cabin;
+  onCloseModal?: () => void;
 };
 
-function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
+function CreateCabinForm({ cabinToEdit, onCloseModal }: CreateCabinFormProps) {
   const { createCabin, isCreating } = useCreateCabin();
   const { editCabin, isEditing } = useEditCabin();
   const isWorking = isCreating || isEditing;
@@ -59,7 +60,10 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
       createCabin(
         { ...data, image },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
         }
       );
     }
@@ -71,7 +75,10 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={onCloseModal ? "modal" : "regular"}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -149,7 +156,11 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
       <FormRow>
         <>
           {/* type is an HTML attribute! */}
-          <Button variation="secondary" type="reset">
+          <Button
+            variation="secondary"
+            type="reset"
+            onClick={() => onCloseModal?.()}
+          >
             Cancel
           </Button>
           <Button disabled={isWorking}>

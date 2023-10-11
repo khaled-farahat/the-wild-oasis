@@ -65,3 +65,5 @@ export type newSettingsType = {
   maxGuestsPerBooking: number;
   minBookingLength: number;
 };
+
+export type RenderFunction<T> = (item: T) => React.ReactNode;

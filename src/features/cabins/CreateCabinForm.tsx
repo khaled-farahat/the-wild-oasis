@@ -53,7 +53,10 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }: CreateCabinFormProps) {
           id: editId as number,
         },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
         }
       );
     } else {

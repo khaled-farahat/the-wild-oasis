@@ -76,3 +76,9 @@ export type RenderFunction<T> = (item: T) => React.ReactNode;
 export type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[]
   ? ElementType
   : never;
+
+export type FilterType = {
+  field: string;
+  value: string;
+  method?: "eq" | "gte" | "lte";
+};

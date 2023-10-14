@@ -46,8 +46,13 @@ export type Guest = {
 };
 
 export type BookingWithCabinAndGuest = Booking & {
-  cabin: Cabin;
-  guest: Guest;
+  cabins: {
+    name: string;
+  };
+  guests: {
+    fullName: string;
+    email: string;
+  };
 };
 
 export type NewCabinType = {
@@ -67,3 +72,7 @@ export type newSettingsType = {
 };
 
 export type RenderFunction<T> = (item: T) => React.ReactNode;
+
+export type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[]
+  ? ElementType
+  : never;

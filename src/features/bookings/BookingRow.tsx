@@ -6,6 +6,7 @@ import Table from "@/ui/Table";
 
 import { formatCurrency } from "@/utils/helpers";
 import { formatDistanceFromNow } from "@/utils/helpers";
+import { BookingType } from "@/services/apiBookings";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -34,6 +35,10 @@ const Amount = styled.div`
   font-weight: 500;
 `;
 
+type BookingRowProps = {
+  booking: BookingType;
+};
+
 function BookingRow({
   booking: {
     id: bookingId,
@@ -47,8 +52,8 @@ function BookingRow({
     guests: { fullName: guestName, email },
     cabins: { name: cabinName },
   },
-}) {
-  const statusToTagName = {
+}: BookingRowProps) {
+  const statusToTagName: Record<string, string> = {
     unconfirmed: "blue",
     "checked-in": "green",
     "checked-out": "silver",
@@ -65,20 +70,22 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
+          {isToday(new Date(startDate ?? ""))
             ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
+            : formatDistanceFromNow(startDate ?? "")}{" "}
           &rarr; {numNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
+          {format(new Date(startDate ?? ""), "MMM dd yyyy")} &mdash;{" "}
+          {format(new Date(endDate ?? ""), "MMM dd yyyy")}
         </span>
       </Stacked>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      <Tag type={statusToTagName[status ?? "unconfirmed"]}>
+        {status?.replace("-", " ")}
+      </Tag>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
+      <Amount>{formatCurrency(totalPrice ?? 0)}</Amount>
     </Table.Row>
   );
 }

@@ -1,6 +1,7 @@
 import supabase from "./supabase";
 import { getToday } from "@/utils/helpers";
 import { Booking, ArrElement, FilterType } from "@/types";
+import { PAGE_SIZE } from "@/utils/constants";
 
 type getBookingsParams = {
   filter: FilterType | null;
@@ -8,13 +9,15 @@ type getBookingsParams = {
     field: string;
     direction: string;
   };
+  page: number;
 };
 
-export async function getBookings({ filter, sortBy }: getBookingsParams) {
+export async function getBookings({ filter, sortBy, page }: getBookingsParams) {
   let query = supabase
     .from("bookings")
     .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)"
+      "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)",
+      { count: "exact" }
     );
 
   // Filter
@@ -29,17 +32,25 @@ export async function getBookings({ filter, sortBy }: getBookingsParams) {
     });
   }
 
-  const { data, error } = await query;
+  if (page) {
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     console.error(error);
     throw new Error("Bookings could not get loaded");
   }
 
-  return data;
+  return { data, count };
 }
 
-export type BookingType = ArrElement<Awaited<ReturnType<typeof getBookings>>>;
+export type BookingType = ArrElement<
+  Awaited<ReturnType<typeof getBookings>>["data"]
+>;
 
 export async function getBooking(id: number) {
   const { data, error } = await supabase

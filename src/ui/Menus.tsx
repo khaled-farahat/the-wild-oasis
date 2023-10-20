@@ -155,9 +155,10 @@ type ButtonProps = {
   children: React.ReactNode;
   icon?: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
-const Button = ({ children, icon, onClick }: ButtonProps) => {
+const Button = ({ children, icon, onClick, disabled }: ButtonProps) => {
   const { close } = useContext(MenusContext);
 
   const handleClick = () => {
@@ -167,7 +168,7 @@ const Button = ({ children, icon, onClick }: ButtonProps) => {
 
   return (
     <li>
-      <StyledButton onClick={handleClick}>
+      <StyledButton onClick={handleClick} disabled={disabled}>
         {icon} <span>{children}</span>
       </StyledButton>
     </li>

@@ -35,3 +35,11 @@ export async function getCurrentUser() {
 }
 
 export type UserType = Awaited<ReturnType<typeof getCurrentUser>>;
+
+export async function logout() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}

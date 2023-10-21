@@ -85,6 +85,10 @@ export async function getBookingsAfterDate(date: string) {
   return data;
 }
 
+export type BookingsAfterDateType = ArrElement<
+  Awaited<ReturnType<typeof getBookingsAfterDate>>
+>;
+
 // Returns all STAYS that are were created after the given date
 export async function getStaysAfterDate(date: string) {
   const { data, error } = await supabase
@@ -101,6 +105,10 @@ export async function getStaysAfterDate(date: string) {
 
   return data;
 }
+
+export type StaysAfterDateType = ArrElement<
+  Awaited<ReturnType<typeof getStaysAfterDate>>
+>;
 
 // Activity means that there is a check in or a check out today
 export async function getStaysTodayActivity() {

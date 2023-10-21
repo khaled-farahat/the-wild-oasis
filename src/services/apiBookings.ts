@@ -131,6 +131,10 @@ export async function getStaysTodayActivity() {
   return data;
 }
 
+export type ActivityType = ArrElement<
+  Awaited<ReturnType<typeof getStaysTodayActivity>>
+>;
+
 export async function updateBooking(id: number, obj: Partial<Booking>) {
   const { data, error } = await supabase
     .from("bookings")

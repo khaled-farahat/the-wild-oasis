@@ -16,6 +16,7 @@ import ConfirmDelete from "@/ui/ConfirmDelete";
 
 import { useMoveBack } from "@/hooks/useMoveBack";
 import { useCheckout } from "@/features/check-in-out/useCheckout";
+import Empty from "@/ui/Empty";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -39,6 +40,8 @@ function BookingDetail() {
   const moveBack = useMoveBack();
 
   if (isLoading) return <Spinner />;
+
+  if (!booking) return <Empty resource="booking" />;
 
   const { status, id: bookingId } = booking || {};
 

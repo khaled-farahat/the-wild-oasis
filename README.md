@@ -75,7 +75,7 @@ The Wild Oasis Hotel Management App is a comprehensive and user-friendly applica
 
 ## 🚀 Live Demo
 
-[the wilde oasis](https://fast-react-pizza-ts.netlify.app)
+[the wilde oasis](https://the-wild-oasis-ts.netlify.app)
 
 ## 📸 Screenshots
 
